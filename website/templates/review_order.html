@@ -1,0 +1,42 @@
+{% extends "base.html" %} 
+
+{% block head_script %}
+{% endblock %}
+
+{% block title %}Order Confirmation{% endblock %} 
+
+{% block content %}
+<h1>Order Confirmation</h1>
+<h2>Guidelines</h2><p></p>
+<ul>
+  <li>We currently accept <b>samples only</b>.</li>
+  <li>Higher quality is better.</li>
+</ul>
+
+<div class="jumbotron">
+
+  <h3>Payment Information</h3>
+  <form method="POST" action="{{ url_for('views.confirm_order') }}">
+    <div class="form-group">
+      <label for="po">Purchase Order</label>
+      <input type="text" class="form-control" id="po" name="po" placeholder="Enter Purchase Order Number" />
+    </div>
+    By clicking "Place Order", you are agreeing to the submission guidelines listed above and your order will placed.
+    <p></p>
+    <div align="right">
+      <button type="submit" id="submit_btn" class="btn btn-success">Place Order</button>
+    </div>
+  </form>
+  <p></p>
+  <h3>Samples to submit</h3>
+  <ol class="list-group list-group-numbered">
+    {% for name in sample_list %}
+      <li class="list-group-item" style="display: list-item; list-style: decimal inside;">{{name}}</li>
+    {% endfor %}
+  </ol>
+
+</div>
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %} 
+
+{% block head_script %}
+<script>
+  function countLines() {
+      // Get the input text value
+      var words = document
+          .getElementById("samples").value;
+
+      //var split = words.split('\n');
+      var cnt = (words.match(/^\s*\S/gm) || "").length
+
+      // Display it as output
+      document.getElementById("submit_btn")
+          .textContent = "Submit " + cnt + " Items";
+  }
+
+</script>
+{% endblock %}
+
+{% block title %}Home{% endblock %} 
+
+{% block content %}
+<h1>Order Items</h1>
+<h2>Instructions</h2><p></p>
+Please provide names in the textbox below. Note:
+<ul>
+  <li>Names should contain only alphanumeric characters, no whitespaces.</li>
+  <li>Use one line per item.</li>
+</ul>
+<h2>Submission</h2>
+<form method="POST">
+  <textarea name="samples" id="samples" class="form-control" rows="4" oninput="countLines()"></textarea>
+  <br />
+  Notes or Special Instructions (1000 characters limit):
+  <textarea name="note" id="note" class="form-control" maxlength="1000"></textarea>
+  <span id="char_count_text">1000 characters left</span>
+  <br />
+  <div align="right">
+    <button type="submit" class="btn btn-primary" id="submit_btn">Submit</button>
+  </div>
+</form>
+
+<h2>Order History</h2>
+
+<table class="table table-hover">
+  <tr>
+    <th>Order Id</th>
+    <th>Date</th>
+    <th>Items</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+  {% for order in user.orders | sort(attribute='submit_date', reverse=True)%}
+  <tr {% if order.status == 'submitted' %} class="table-primary"
+  {% elif order.status == 'canceled' %} class="table-secondary" {% endif %}>
+    <th>{{ order.id }}</th>
+    <th>{{ order.submit_date }}</th>
+    <th>{{ order.num_samples }}</th>
+    <th>{{ order.status }}</th>
+    <th> 
+      <button type="submit" class="btn btn-sm btn-info" id="info_btn">Info</button>
+      {% if order.status == 'submitted' %}
+        <button type="submit" class="btn btn-sm btn-danger" id="cxl_btn" onClick="cancelOrder({{ order.id }})">Cancel</button>
+      {% elif order.status == 'submitted' %}
+        <button type="submit" class="btn btn-sm btn-success" id="download_btn">Download</button>
+      {% endif %}
+    </button></th>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}
